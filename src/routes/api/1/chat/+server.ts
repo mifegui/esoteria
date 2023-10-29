@@ -44,6 +44,7 @@ export const POST: RequestHandler = async (data) => {
 	// Respond with the stream
 	return new StreamingTextResponse(stream, {
 		headers: {
+			'Transfer-Encoding': 'chunked',
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Headers': '*'
 		}
