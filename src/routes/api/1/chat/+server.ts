@@ -21,7 +21,6 @@ export const OPTIONS: RequestHandler = async () => {
 // TODO: https://supabase.com/blog/openai-embeddings-postgres-vector ou https://groff.dev/blog/openai-embeddings-supabase
 // OU: https://platform.openai.com/docs/guides/fine-tuning
 
-
 const openai = new OpenAI({
 	apiKey: PRIVATE_OPENAI_KEY
 });
@@ -43,6 +42,10 @@ export const POST: RequestHandler = async (data) => {
 	// Convert the response into a friendly text-stream
 	const stream = OpenAIStream(response);
 	// Respond with the stream
-	return new StreamingTextResponse(stream);
-
+	return new StreamingTextResponse(stream, {
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Headers': '*'
+		}
+	});
 };
