@@ -8,15 +8,15 @@ import { PRIVATE_SUPABASE_KEY } from '$env/static/private';
 import { PRIVATE_OPENAI_KEY } from '$env/static/private';
 
 // https://dev.to/khromov/configure-cors-in-sveltekit-to-make-fetch-requests-to-your-api-routes-from-a-different-host-241k
-// export const OPTIONS: RequestHandler = async () => {
-// 	return new Response(null, {
-// 		headers: {
-// 			'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-// 			'Access-Control-Allow-Origin': '*',
-// 			'Access-Control-Allow-Headers': '*'
-// 		}
-// 	});
-// };
+export const OPTIONS: RequestHandler = async () => {
+	return new Response(null, {
+		headers: {
+			'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Headers': '*'
+		}
+	});
+};
 
 // TODO: https://supabase.com/blog/openai-embeddings-postgres-vector ou https://groff.dev/blog/openai-embeddings-supabase
 // OU: https://platform.openai.com/docs/guides/fine-tuning
