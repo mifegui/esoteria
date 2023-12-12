@@ -7,8 +7,27 @@ import type { RequestHandler } from './$types';
 import { PRIVATE_SUPABASE_KEY } from '$env/static/private';
 import { PRIVATE_OPENAI_KEY } from '$env/static/private';
 
+// https://dev.to/khromov/configure-cors-in-sveltekit-to-make-fetch-requests-to-your-api-routes-from-a-different-host-241k
+export const OPTIONS: RequestHandler = async () => {
+	return new Response(null, {
+		headers: {
+			'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Headers': '*'
+		}
+	});
+};
 
-const contexto = `
+// TODO: https://supabase.com/blog/openai-embeddings-postgres-vector ou https://groff.dev/blog/openai-embeddings-supabase
+// OU: https://platform.openai.com/docs/guides/fine-tuning
+
+const openai = new OpenAI({
+	apiKey: PRIVATE_OPENAI_KEY
+});
+export const POST: RequestHandler = async (data) => {
+	// const supabase = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_KEY);
+
+	const contexto = `
 Uma das minhas maiores broncas com os que acreditam que não existe nada além do físico e suas “experiências refutando a Astrologia” é que a imensa maioria das experiências feitas até hoje que já caíram nas minhas mãos (e não foram poucas) caem nos seguintes quesitos:
 
 
@@ -141,28 +160,9 @@ Desta forma está a dificuldade em adequar o real ao experimento... fazer "teste
 
 Por outro lado, o Mapa seria gerado pelo banco de dados que estamos organizando através das doações dos leitores do Teoria da Conspiração, ou seja, sem a "interpretação" pessoal do Astrólogo. E como comparação, um grupo de psicólogos/astrólogos compararia o perfil psicológico da pessoa com o do mapa e faria as correspondências. Claro que eu gostaria de fazer isso não com 20 mapas, mas com 10.000 mapas. Só que daria um puta trabalho... e os céticos já estão previamente convencidos que astrologia não funciona (embora eu sempre pensasse que cientistas avaliassem primeiro e julgassem depois, mas tudo bem).
 
-O texto acima é o contexto que vocês precisa para conversar com o usuário sobre astrologia.`;
+O texto acima é o contexto que vocês precisa para conversar com o usuário sobre astrologia.
 
-
-// https://dev.to/khromov/configure-cors-in-sveltekit-to-make-fetch-requests-to-your-api-routes-from-a-different-host-241k
-export const OPTIONS: RequestHandler = async () => {
-	return new Response(null, {
-		headers: {
-			'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Headers': '*'
-		}
-	});
-};
-
-// TODO: https://supabase.com/blog/openai-embeddings-postgres-vector ou https://groff.dev/blog/openai-embeddings-supabase
-// OU: https://platform.openai.com/docs/guides/fine-tuning
-
-const openai = new OpenAI({
-	apiKey: PRIVATE_OPENAI_KEY
-});
-export const POST: RequestHandler = async (data) => {
-	// const supabase = createClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_KEY);
+Use o texto acima para responder as perguntas do usuário, voce deve falar no mesmo estilo e modo de pensar do autor do texto acima.`;
 
 	// Extract the `prompt` from the body of the request
 	const { messages } = await data.request.json();
